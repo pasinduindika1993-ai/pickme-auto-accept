@@ -9,21 +9,12 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-    - name: Build APK
+    - name: Build APK with ant
       run: |
-        mkdir -p app/src/main
-        cp AndroidManifest.xml app/src/main/
-        cp -r src app/src/main/
-        cp -r res app/src/main/
-        printf "rootProject.name = 'PickMeAutoAccept'\ninclude ':app'\n" > settings.gradle
-        printf "buildscript {\n  repositories { google(); mavenCentral() }\n  dependencies { classpath 'com.android.tools.build:gradle:8.1.0' }\n}\n" > build.gradle
-        printf "apply plugin: 'com.android.application'\nandroid {\n  namespace 'com.pickme.autoaccept'\n  compileSdkVersion 33\n  defaultConfig {\n    applicationId 'com.pickme.autoaccept'\n    minSdkVersion 21\n    targetSdkVersion 33\n  }\n}\n" > app/build.gradle
-        gradle wrapper
-        chmod +x gradlew
-        ./gradlew assembleDebug
+        sudo apt-get install -y ant android-sdk
+        android update project -p . -n PickMeAutoAccept --target android-33
+        ant debug
     - uses: actions/upload-artifact@v4
       with:
         name: pickme-apk
-        path: app/build/outputs/apk/debug/*.apk
+        path: bin/*.apk
