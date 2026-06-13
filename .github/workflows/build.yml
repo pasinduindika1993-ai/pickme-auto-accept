@@ -17,19 +17,42 @@ jobs:
         cp AndroidManifest.xml app/src/main/
         cp -r src app/src/main/
         cp -r res app/src/main/
-        echo 'rootProject.name = "PickMeAutoAccept"' > settings.gradle
-        echo 'include ":app"' >> settings.gradle
-        echo 'plugins { id "com.android.application" version "8.1.0" apply false }' > build.gradle
-        echo 'plugins { id "com.android.application" }' > app/build.gradle
-        echo 'android {' >> app/build.gradle
-        echo '  namespace "com.pickme.autoaccept"' >> app/build.gradle
-        echo '  compileSdk 33' >> app/build.gradle
-        echo '  defaultConfig {' >> app/build.gradle
-        echo '    applicationId "com.pickme.autoaccept"' >> app/build.gradle
-        echo '    minSdk 21' >> app/build.gradle
-        echo '    targetSdk 33' >> app/build.gradle
-        echo '  }' >> app/build.gradle
-        echo '}' >> app/build.gradle
+        cat > settings.gradle << 'SEOF'
+pluginManagement {
+  repositories {
+    google()
+    mavenCentral()
+    gradlePluginPortal()
+  }
+}
+dependencyResolutionManagement {
+  repositories {
+    google()
+    mavenCentral()
+  }
+}
+rootProject.name = "PickMeAutoAccept"
+include ":app"
+SEOF
+        cat > build.gradle << 'BEOF'
+plugins {
+  id "com.android.application" version "8.1.0" apply false
+}
+BEOF
+        cat > app/build.gradle << 'AEOF'
+plugins {
+  id "com.android.application"
+}
+android {
+  namespace "com.pickme.autoaccept"
+  compileSdk 33
+  defaultConfig {
+    applicationId "com.pickme.autoaccept"
+    minSdk 21
+    targetSdk 33
+  }
+}
+AEOF
         wget -q https://services.gradle.org/distributions/gradle-8.1-bin.zip
         unzip -q gradle-8.1-bin.zip
         ./gradle-8.1/bin/gradle wrapper
