@@ -17,42 +17,11 @@ jobs:
         cp AndroidManifest.xml app/src/main/
         cp -r src app/src/main/
         cp -r res app/src/main/
-        cat > settings.gradle << 'SEOF'
-pluginManagement {
-  repositories {
-    google()
-    mavenCentral()
-    gradlePluginPortal()
-  }
-}
-dependencyResolutionManagement {
-  repositories {
-    google()
-    mavenCentral()
-  }
-}
-rootProject.name = "PickMeAutoAccept"
-include ":app"
-SEOF
-        cat > build.gradle << 'BEOF'
-plugins {
-  id "com.android.application" version "8.1.0" apply false
-}
-BEOF
-        cat > app/build.gradle << 'AEOF'
-plugins {
-  id "com.android.application"
-}
-android {
-  namespace "com.pickme.autoaccept"
-  compileSdk 33
-  defaultConfig {
-    applicationId "com.pickme.autoaccept"
-    minSdk 21
-    targetSdk 33
-  }
-}
-AEOF
+        python3 -c "
+        open('settings.gradle','w').write('pluginManagement {\n  repositories {\n    google()\n    mavenCentral()\n    gradlePluginPortal()\n  }\n}\ndependencyResolutionManagement {\n  repositories {\n    google()\n    mavenCentral()\n  }\n}\nrootProject.name = \"PickMeAutoAccept\"\ninclude \":app\"\n')
+        open('build.gradle','w').write('plugins {\n  id \"com.android.application\" version \"8.1.0\" apply false\n}\n')
+        open('app/build.gradle','w').write('plugins {\n  id \"com.android.application\"\n}\nandroid {\n  namespace \"com.pickme.autoaccept\"\n  compileSdk 33\n  defaultConfig {\n    applicationId \"com.pickme.autoaccept\"\n    minSdk 21\n    targetSdk 33\n  }\n}\n')
+        "
         wget -q https://services.gradle.org/distributions/gradle-8.1-bin.zip
         unzip -q gradle-8.1-bin.zip
         ./gradle-8.1/bin/gradle wrapper
