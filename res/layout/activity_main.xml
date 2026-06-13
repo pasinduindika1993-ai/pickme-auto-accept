@@ -1,74 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="#000000">
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:text="PickMe Auto-Accept Settings"
+        android:textColor="#2196F3"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="PickMe Auto-Accept Settings"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="24dp"
-            android:textColor="#2196F3"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Allowed Destinations:"
+        android:textColor="#AAAAAA"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Allowed Destinations (කමා වලින් වෙන් කරන්න):"
-            android:textStyle="bold"/>
-            
-        <EditText
-            android:id="@+id/etDestinations"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Gampaha, Colombo, Kadawatha"
-            android:layout_marginBottom="16dp"/>
+    <EditText
+        android:id="@+id/etDestinations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Gampaha, Colombo"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#555555"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Minimum Fare (අවම වටිනාකම රු.):"
-            android:textStyle="bold"/>
-            
-        <EditText
-            android:id="@+id/etMinFare"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="500"
-            android:inputType="number"
-            android:layout_marginBottom="16dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Minimum Fare (Rs.):"
+        android:textColor="#AAAAAA"
+        android:layout_marginTop="16dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Max Pickup Distance (උපරිම දුර km):"
-            android:textStyle="bold"/>
-            
-        <EditText
-            android:id="@+id/etMaxDistance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="3.0"
-            android:inputType="numberDecimal"
-            android:layout_marginBottom="24dp"/>
+    <EditText
+        android:id="@+id/etMinFare"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="500"
+        android:inputType="numberDecimal"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#555555"/>
 
-        <Button
-            android:id="@+id/btnStart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Start Auto-Accept Service"
-            android:backgroundTint="#4CAF50"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Max Pickup Distance (km):"
+        android:textColor="#AAAAAA"
+        android:layout_marginTop="16dp"/>
 
-    </LinearLayout>
-</ScrollView>
+    <EditText
+        android:id="@+id/etMaxDistance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="3.0"
+        android:inputType="numberDecimal"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#555555"/>
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Auto-Accept Service"
+        android:background="#4CAF50"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="32dp"/>
+
+</LinearLayout>
