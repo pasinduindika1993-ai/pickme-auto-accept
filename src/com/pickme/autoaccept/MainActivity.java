@@ -20,18 +20,14 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // UI Components සම්බන්ධ කරගැනීම
-        etDestinations = (EditText) findViewById(R.id.etDestinations);
-        etMinFare     = (EditText) findViewById(R.id.etMinFare);
-        etMaxDistance = (EditText) findViewById(R.id.etMaxDistance);
-        btnStart      = (Button)   findViewById(R.id.btnStart);
+        etDestinations = findViewById(R.id.etDestinations);
+        etMinFare = findViewById(R.id.etMinFare);
+        etMaxDistance = findViewById(R.id.etMaxDistance);
+        btnStart = findViewById(R.id.btnStart);
 
         sharedPreferences = getSharedPreferences("PickMeSettings", Context.MODE_PRIVATE);
-
-        // කලින් සේව් කරපු ඩේටා තිබේ නම් Auto-fill කිරීම
         loadSettings();
 
-        // බටන් ක්ලික් කරද්දී ඩේටා සේව් කිරීම
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,50 +37,32 @@ public class MainActivity extends Activity {
     }
 
     private void saveSettings() {
-        String dest    = etDestinations.getText().toString().trim();
+        String dest = etDestinations.getText().toString().trim();
         String fareStr = etMinFare.getText().toString().trim();
         String distStr = etMaxDistance.getText().toString().trim();
 
-        // BUG FIX: Empty check කිරීම
         if (dest.isEmpty() || fareStr.isEmpty() || distStr.isEmpty()) {
-            Toast.makeText(this, "කරුණාකර සියලුම විස්තර ඇතුළත් කරන්න!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "සියලු විස්තර ඇතුළත් කරන්න!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // BUG FIX: NumberFormatException catch කිරීම - invalid numbers දෙද්දී crash වෙයි
-        float fare, dist;
         try {
-            fare = Float.parseFloat(fareStr);
-            dist = Float.parseFloat(distStr);
+            float fare = Float.parseFloat(fareStr);
+            float dist = Float.parseFloat(distStr);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("destinations", dest);
+            editor.putFloat("minFare", fare);
+            editor.putFloat("maxDistance", dist);
+            editor.apply();
+            Toast.makeText(MainActivity.this, "සේව් වුණා! Accessibility සේවාව On කරන්න.", Toast.LENGTH_LONG).show();
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "Fare සහ Distance සඳහා valid numbers ඇතුළත් කරන්න!", Toast.LENGTH_SHORT).show();
-            return;
+            Toast.makeText(MainActivity.this, "Valid numbers ඇතුළත් කරන්න!", Toast.LENGTH_SHORT).show();
         }
-
-        // BUG FIX: Negative values validate කිරීම
-        if (fare <= 0 || dist <= 0) {
-            Toast.makeText(this, "Fare සහ Distance ශුන්‍යයට වඩා වැඩි විය යුතුයි!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("destinations", dest);
-        editor.putFloat("minFare", fare);
-        editor.putFloat("maxDistance", dist);
-        editor.apply();
-
-        Toast.makeText(this, "සෙටින්ග්ස් සාර්ථකව සේව් වුණා! කරුණාකර Accessibility සේවාව On කරන්න.", Toast.LENGTH_LONG).show();
     }
 
     private void loadSettings() {
-        // BUG FIX: getFloat() default values නිවැරදිව set කිරීම
-        String dest   = sharedPreferences.getString("destinations", "");
-        float minFare = sharedPreferences.getFloat("minFare", 500f);
-        float maxDist = sharedPreferences.getFloat("maxDistance", 3.0f);
-
-        etDestinations.setText(dest);
-        // BUG FIX: fare integer ලෙස, distance decimal ලෙස format කිරීම
-        etMinFare.setText(String.valueOf((int) minFare));
-        etMaxDistance.setText(String.valueOf(maxDist));
+        etDestinations.setText(sharedPreferences.getString("destinations", ""));
+        etMinFare.setText(String.valueOf((int) sharedPreferences.getFloat("minFare", 500f)));
+        etMaxDistance.setText(String.valueOf(sharedPreferences.getFloat("maxDistance", 3.0f)));
     }
 }
