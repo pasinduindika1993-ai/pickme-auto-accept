@@ -11,7 +11,7 @@ jobs:
         distribution: 'temurin'
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
-    - name: Create project files
+    - name: Build APK
       run: |
         mkdir -p app/src/main
         cp AndroidManifest.xml app/src/main/
@@ -19,24 +19,22 @@ jobs:
         cp -r res app/src/main/
         echo 'rootProject.name = "PickMeAutoAccept"' > settings.gradle
         echo 'include ":app"' >> settings.gradle
-        echo 'buildscript {' > build.gradle
-        echo '  repositories { google(); mavenCentral() }' >> build.gradle
-        echo '  dependencies { classpath "com.android.tools.build:gradle:8.1.0" }' >> build.gradle
-        echo '}' >> build.gradle
-        echo 'apply plugin: "com.android.application"' > app/build.gradle
+        echo 'plugins { id "com.android.application" version "8.1.0" apply false }' > build.gradle
+        echo 'plugins { id "com.android.application" }' > app/build.gradle
         echo 'android {' >> app/build.gradle
         echo '  namespace "com.pickme.autoaccept"' >> app/build.gradle
-        echo '  compileSdkVersion 33' >> app/build.gradle
+        echo '  compileSdk 33' >> app/build.gradle
         echo '  defaultConfig {' >> app/build.gradle
         echo '    applicationId "com.pickme.autoaccept"' >> app/build.gradle
-        echo '    minSdkVersion 21' >> app/build.gradle
-        echo '    targetSdkVersion 33' >> app/build.gradle
+        echo '    minSdk 21' >> app/build.gradle
+        echo '    targetSdk 33' >> app/build.gradle
         echo '  }' >> app/build.gradle
         echo '}' >> app/build.gradle
-        gradle wrapper --gradle-version 8.1
+        wget -q https://services.gradle.org/distributions/gradle-8.1-bin.zip
+        unzip -q gradle-8.1-bin.zip
+        ./gradle-8.1/bin/gradle wrapper
         chmod +x gradlew
-    - name: Build APK
-      run: ./gradlew assembleDebug
+        ./gradlew assembleDebug
     - uses: actions/upload-artifact@v4
       with:
         name: pickme-apk
