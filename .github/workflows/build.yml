@@ -1,0 +1,40 @@
+name: Build APK
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+    - name: Create Gradle project
+      run: |
+        mkdir -p app/src/main
+        cp AndroidManifest.xml app/src/main/
+        cp -r src app/src/main/
+        cp -r res app/src/main/
+        echo "rootProject.name = 'PickMeAutoAccept'
+        include ':app'" > settings.gradle
+        echo "buildscript {
+          repositories { google(); mavenCentral() }
+          dependencies { classpath 'com.android.tools.build:gradle:8.1.0' }
+        }" > build.gradle
+        echo "apply plugin: 'com.android.application'
+        android {
+          compileSdkVersion 33
+          defaultConfig {
+            applicationId 'com.pickme.autoaccept'
+            minSdkVersion 21
+            targetSdkVersion 33
+          }
+        }" > app/build.gradle
+    - name: Build APK
+      run: ./gradlew assembleDebug
+    - uses: actions/upload-artifact@v4
+      with:
+        name: pickme-apk
+        path: app/build/outputs/apk/debug/*.apk
